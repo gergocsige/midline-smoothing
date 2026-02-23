@@ -4,14 +4,12 @@ using namespace std;
 
 struct Point {
     double x, y;
-    /*
-    TODO Remove this operator overload (possibly unneeded)
+
     Point& operator+=(const Point& other) {
         this->x += other.x;
         this->y += other.y;
         return *this;
     }
-    */
 };
 
 Point operator+( const Point& p1, const Point& p2) { return {p1.x + p2.x, p1.y + p2.y}; }
@@ -47,20 +45,28 @@ void smooth_moving_avg(const vector<Point>& jagged, vector<Point>& smooth) {
     }
 }
 
-const vector<double> weights = {0.2, 1.6, 3.8, 4.9, 3.8, 1.6, 0.2};
+const vector<double> weights = { 0.2, 1.6, 3.8, 4.9, 3.8, 1.6, 0.2 };
 
 inline int clamp(int n, int low_bound, int high_bound) { return ( n < low_bound ? low_bound : ( n > high_bound ? high_bound : n )); };
 
 void smooth_weighted(const vector<Point>& jagged, vector<Point>& smooth) {
     int len = jagged.size();
+    int k = 0;
+    double weightsum = 0.0;
     for( int i = 0; i < len; ++i ) {
-        for (int j = clamp(i-3, 0, len); j <= clamp(i+3, 0, len-1); ++j) {
-            if (i == j) {
-                cout << i << " <" << endl;
-            } else {
-                cout << j << endl;
+        smooth.at(i) = {0.0, 0.0};
+        for (int j = i-3; j <= i+3; ++j) {
+            if (j == clamp(j, 0, len-1)) {
+                if (i == j) {
+                    cout << i << " <" << endl;
+                } else {
+                    cout << j << " " << k << endl;
+                }
+                smooth.at(i) += jagged.at(j) * weights.at(k);
+                weightsum += weights.at(k);
             }
-        } cout << endl;
+            k++;
+        } cout << endl; smooth.at(i) = smooth.at(i) / weightsum; k = 0; weightsum = 0.0;
     }
 }
 
@@ -82,6 +88,8 @@ int main(void) {
     cout << smooth << endl;
 
     smooth_weighted(points, smooth);
+
+    cout << smooth << endl;
 
     return 0;
 }
