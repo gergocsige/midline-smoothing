@@ -49,8 +49,19 @@ void smooth_moving_avg(const vector<Point>& jagged, vector<Point>& smooth) {
 
 const vector<double> weights = {0.2, 1.6, 3.8, 4.9, 3.8, 1.6, 0.2};
 
-void smooth_weighted(const vector<Point>& jagged, vector<Point>& smooth) {
+inline int clamp(int n, int low_bound, int high_bound) { return ( n < low_bound ? low_bound : ( n > high_bound ? high_bound : n )); };
 
+void smooth_weighted(const vector<Point>& jagged, vector<Point>& smooth) {
+    int len = jagged.size();
+    for( int i = 0; i < len; ++i ) {
+        for (int j = clamp(i-3, 0, len); j <= clamp(i+3, 0, len-1); ++j) {
+            if (i == j) {
+                cout << i << " <" << endl;
+            } else {
+                cout << j << endl;
+            }
+        } cout << endl;
+    }
 }
 
 int main(void) {
@@ -69,6 +80,8 @@ int main(void) {
     smooth_moving_avg(points, smooth);
 
     cout << smooth << endl;
+
+    smooth_weighted(points, smooth);
 
     return 0;
 }
