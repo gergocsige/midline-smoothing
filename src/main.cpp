@@ -4,17 +4,30 @@ using namespace std;
 
 struct Point {
     double x, y;
-
+    /*
+    TODO Remove this operator overload (possibly unneeded)
     Point& operator+=(const Point& other) {
         this->x += other.x;
         this->y += other.y;
         return *this;
     }
+    */
 };
 
 Point operator+( const Point& p1, const Point& p2) { return {p1.x + p2.x, p1.y + p2.y}; }
 Point operator+( const Point& p1, double c) { return {p1.x + c, p1.y + c}; }
+Point operator*( const Point& p1, double m) { return {p1.x * m, p1.y * m}; }
 Point operator/( const Point& p1, double d) { return {p1.x / d, p1.y / d}; }
+ostream& operator<<(ostream& os, const Point& pt) {
+    os << pt.x << " " << pt.y;
+    return os;
+};
+ostream& operator<<(ostream& os, const vector<Point>& pts) {
+    for(Point pt : pts) {
+        os << pt << endl;
+    }
+    return os;
+};
 
 void smooth_moving_avg(const vector<Point>& jagged, vector<Point>& smooth) {
     int len = jagged.size();
@@ -31,6 +44,12 @@ void smooth_moving_avg(const vector<Point>& jagged, vector<Point>& smooth) {
     }
 }
 
+const vector<double> weights = {0.2, 1.6, 3.8, 4.9, 3.8, 1.6, 0.2};
+
+void smooth_weighted(const vector<Point>& jagged, vector<Point>& smooth) {
+
+}
+
 int main(void) {
     int n;
     cin >> n;
@@ -38,21 +57,15 @@ int main(void) {
     vector<Point> smooth(n);
 
     for(Point& pt : points) {
-        cout << "Enter Point x coordinate: ";
-        cin >> pt.x;
-        cout << "Enter Point y coordinate: ";
-        cin >> pt.y;
+        cout << "Enter Point x and y coordinate: ";
+        cin >> pt.x >> pt.y;
     }
 
-    for(Point pt : points) {
-        cout << pt.x << " " << pt.y << endl;
-    }
+    cout << points << endl;
 
     smooth_moving_avg(points, smooth);
 
-    for(Point pt : smooth) {
-        cout << pt.x << " " << pt.y << endl;
-    }
+    cout << smooth << endl;
 
     return 0;
 }
