@@ -18,11 +18,14 @@ Point operator+( const Point& p1, const Point& p2) { return {p1.x + p2.x, p1.y +
 Point operator+( const Point& p1, double c) { return {p1.x + c, p1.y + c}; }
 Point operator*( const Point& p1, double m) { return {p1.x * m, p1.y * m}; }
 Point operator/( const Point& p1, double d) { return {p1.x / d, p1.y / d}; }
+// TODO Remove this after testing
 ostream& operator<<(ostream& os, const Point& pt) {
-    os << pt.x << " " << pt.y;
+    os << "X: " << pt.x << " | Y: " << pt.y;
     return os;
 };
+// TODO Remove this after testing
 ostream& operator<<(ostream& os, const vector<Point>& pts) {
+    cout << "-[ Points ]-" << endl << "--------------------" << endl;
     for(Point pt : pts) {
         os << pt << endl;
     }
