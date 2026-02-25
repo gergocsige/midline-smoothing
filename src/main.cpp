@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <iomanip>
 using namespace std;
 
 struct Point {
@@ -23,12 +24,12 @@ Point operator*( const Point& p1, double m) { return {p1.x * m, p1.y * m}; }
 Point operator/( const Point& p1, double d) { return {p1.x / d, p1.y / d}; }
 // TODO Remove this after testing
 ostream& operator<<(ostream& os, const Point& pt) {
-    os << "X: " << pt.x << " | Y: " << pt.y;
+    os << "X: " << setprecision(5) << fixed << pt.x << " | Y: " << setprecision(5) << fixed << pt.y;
     return os;
 };
 // TODO Remove this after testing
 ostream& operator<<(ostream& os, const vector<Point>& pts) {
-    cout << "-[ Points ]-" << endl << "--------------------" << endl;
+    cout << "     -[ Points ]-" << endl << "-----------------------" << endl;
     for(Point pt : pts) {
         os << pt << endl;
     }
@@ -62,15 +63,9 @@ void smooth_weighted(const vector<Point>& jagged, vector<Point>& smooth) {
         smooth.at(i) = {0.0, 0.0};
         for (int j = i-3; j <= i+3; ++j) {
             if (j == clamp(j, 0, len-1)) {
-                if (i == j) {
-                    cout << i << " <" << endl;
-                } else {
-                    cout << j << " " << k << endl;
-                }
                 smooth.at(i) += jagged.at(j) * weights.at(k);
                 weightsum += weights.at(k);
-            }
-            k++;
+            } k++;
         } cout << endl; smooth.at(i) /= weightsum; k = 0; weightsum = 0.0;
     }
 }
