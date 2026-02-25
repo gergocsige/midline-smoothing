@@ -10,10 +10,15 @@ struct Point {
         this->y += other.y;
         return *this;
     }
+
+    Point& operator/=(const double d) {
+        this->x /= d;
+        this->y /= d;
+        return *this;
+    }
 };
 
 Point operator+( const Point& p1, const Point& p2) { return {p1.x + p2.x, p1.y + p2.y}; }
-Point operator+( const Point& p1, double c) { return {p1.x + c, p1.y + c}; }
 Point operator*( const Point& p1, double m) { return {p1.x * m, p1.y * m}; }
 Point operator/( const Point& p1, double d) { return {p1.x / d, p1.y / d}; }
 // TODO Remove this after testing
@@ -66,7 +71,7 @@ void smooth_weighted(const vector<Point>& jagged, vector<Point>& smooth) {
                 weightsum += weights.at(k);
             }
             k++;
-        } cout << endl; smooth.at(i) = smooth.at(i) / weightsum; k = 0; weightsum = 0.0;
+        } cout << endl; smooth.at(i) /= weightsum; k = 0; weightsum = 0.0;
     }
 }
 
