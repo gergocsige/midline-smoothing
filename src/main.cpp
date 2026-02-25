@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <iomanip>
+#include <limits>
 using namespace std;
 
 struct Point {
@@ -26,6 +27,10 @@ Point operator/( const Point& p1, double d) { return {p1.x / d, p1.y / d}; }
 ostream& operator<<(ostream& os, const Point& pt) {
     os << "X: " << setprecision(5) << fixed << pt.x << " | Y: " << setprecision(5) << fixed << pt.y;
     return os;
+};
+istream& operator>>(istream& is, Point& pt) {
+    is >> pt.x >> pt.y;
+    return is;
 };
 // TODO Remove this after testing
 ostream& operator<<(ostream& os, const vector<Point>& pts) {
@@ -68,22 +73,54 @@ void smooth_weighted(const vector<Point>& jagged, vector<Point>& smooth) {
     }
 }
 
+inline void remove_bad_stdin() { cin.ignore(numeric_limits<streamsize>::max(), '\n'); };
+
+bool get_num_of_points(int& n) {
+    cout << "Enter the number of points in the trajectory: ";
+    cin >> n;
+    if (cin.fail()) {
+        cin.clear();
+        remove_bad_stdin();
+        return false;
+    } else if (n <= 0) {
+        return false;
+    }
+    remove_bad_stdin();
+    return true;
+}
+
+bool get_points(vector<Point>& points) {
+    for(Point& pt : points) {
+        cout << "Enter Point x and y coordinate: ";
+        cin >> pt;
+        if (cin.fail()) {
+            cin.clear();
+            remove_bad_stdin();
+            return false;
+        }
+    }
+    return true;
+}
+
 int main(void) {
     int n;
-    cin >> n;
+    while (!get_num_of_points(n)) {
+        cout << "Invalid input, try again!" << endl;
+    }
+    
     vector<Point> points(n);
     vector<Point> smooth(n);
 
     for(Point& pt : points) {
         cout << "Enter Point x and y coordinate: ";
-        cin >> pt.x >> pt.y;
+        cin >> pt;
     }
 
-    cout << points << endl;
+    cout << endl << "Moving average smoothing:" << endl;
 
     smooth_moving_avg(points, smooth);
 
-    cout << smooth << endl;
+    cout << smooth << endl << "Weighted smoothing:" << endl;
 
     smooth_weighted(points, smooth);
 
