@@ -45,15 +45,13 @@ ostream& operator<<(ostream& os, const vector<Point>& pts) {
 void smooth_moving_avg(const vector<Point>& jagged, vector<Point>& smooth) {
     int len = jagged.size();
     if (len < 3) {
-        for( int i = 0; i < len; ++i ) {
-            smooth.at(i) = jagged.at(i);
-        } return;
-    } else {
-        smooth.at(0) = jagged.at(0);
-        for( int i = 1; i < len - 1; ++i ) {
-            smooth.at(i) = ( jagged.at(i-1) + jagged.at(i) + jagged.at(i+1) ) / 3;
-        }
-        smooth.at(len-1) = jagged.at(len-1);
+        smooth = jagged;
+        return;
+    }
+    smooth[0] = jagged[0];
+    smooth[len-1] = jagged[len-1];
+    for( int i = 1; i < len - 1; ++i ) {
+        smooth[i] = ( jagged[i-1] + jagged[i] + jagged[i+1] ) / 3;
     }
 }
 
@@ -61,7 +59,6 @@ const vector<double> weights = { 0.2, 1.6, 3.8, 4.9, 3.8, 1.6, 0.2 };
 
 void smooth_weighted(const vector<Point>& jagged, vector<Point>& smooth) {
     int len = jagged.size();
-
     for( int i = 0; i < len; ++i ) {
         Point weighted_pointsum = {0.0, 0.0};
         double weightsum = 0.0;
