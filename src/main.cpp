@@ -77,7 +77,7 @@ void smooth_weighted(const vector<Point>& jagged, vector<Point>& smooth) {
 inline void remove_bad_stdin() { cin.ignore(numeric_limits<streamsize>::max(), '\n'); };
 
 bool get_num_of_points(int& n) {
-    cout << "Enter the number of points in the trajectory: ";
+    cout << "Number of points in the trajectory: ";
     cin >> n;
     if (cin.fail()) {
         cin.clear();
@@ -92,7 +92,7 @@ bool get_num_of_points(int& n) {
 
 bool get_points(vector<Point>& points) {
     for(Point& pt : points) {
-        cout << "Enter Point x and y coordinate: ";
+        cout << "Point x and y coordinate: ";
         cin >> pt;
         if (cin.fail()) {
             cin.clear();
@@ -104,28 +104,35 @@ bool get_points(vector<Point>& points) {
     return true;
 }
 
+bool get_smoothing_type(string& type) {
+    cout << "Type of smoothing (NONE, MOVING_AVG, WEIGHTED): ";
+    cin >> type;
+    if (type != "NONE" && type != "MOVING_AVG" && type != "WEIGHTED")
+        return false;
+    return true;
+}
+
 int main(void) {
     int n;
-    while (!get_num_of_points(n)) {
-        cout << "Invalid input, try again!" << endl;
-    }
+    while (!get_num_of_points(n)) { cout << "Invalid input, try again!" << endl; }
     
     vector<Point> points(n);
     vector<Point> smooth(n);
-    
-    while (!get_points(points)) {
-        cout << "Invalid input, try again (all previous points ignored)" << endl;
+    while (!get_points(points)) { cout << "Invalid input, try again (all previous points ignored)" << endl; }
+
+    string type;
+    while (!get_smoothing_type(type)) { cout << "Invalid smoothing type, try again!" << endl; }
+
+    if (type == "MOVING_AVG") {
+        smooth_moving_avg(points, smooth);
+        cout << smooth;
+    } else if (type == "WEIGHTED") {
+        smooth_weighted(points, smooth);
+        cout << smooth;
+    } else {
+        smooth = points;
+        cout << smooth;
     }
-
-    cout << endl << "Moving average smoothing:" << endl;
-
-    smooth_moving_avg(points, smooth);
-
-    cout << smooth << endl << "Weighted smoothing:" << endl;
-
-    smooth_weighted(points, smooth);
-
-    cout << smooth << endl;
 
     return 0;
 }
