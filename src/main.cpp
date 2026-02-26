@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <iomanip>
+#include <string>
 #include <limits>
 #include <algorithm>
 using namespace std;
@@ -13,33 +13,24 @@ struct Point {
         this->y += other.y;
         return *this;
     }
-
-    Point& operator/=(const double d) {
-        this->x /= d;
-        this->y /= d;
-        return *this;
-    }
 };
 
 Point operator+( const Point& p1, const Point& p2) { return {p1.x + p2.x, p1.y + p2.y}; }
 Point operator*( const Point& p1, double m) { return {p1.x * m, p1.y * m}; }
 Point operator/( const Point& p1, double d) { return {p1.x / d, p1.y / d}; }
-// TODO Remove this after testing
+
 ostream& operator<<(ostream& os, const Point& pt) {
-    os << "X: " << setprecision(5) << fixed << pt.x << " | Y: " << setprecision(5) << fixed << pt.y;
+    os << pt.x << " " << pt.y;
     return os;
 };
 istream& operator>>(istream& is, Point& pt) {
     is >> pt.x >> pt.y;
     return is;
 };
-// TODO Remove this after testing
 ostream& operator<<(ostream& os, const vector<Point>& pts) {
-    cout << "     -[ Points ]-" << endl << "-----------------------" << endl;
     for(Point pt : pts) {
         os << pt << endl;
-    }
-    return os;
+    } return os;
 };
 
 void smooth_moving_avg(const vector<Point>& jagged, vector<Point>& smooth) {
@@ -86,7 +77,6 @@ bool get_num_of_points(int& n) {
     } else if (n <= 0) {
         return false;
     }
-    remove_bad_stdin();
     return true;
 }
 
@@ -99,7 +89,6 @@ bool get_points(vector<Point>& points) {
             remove_bad_stdin();
             return false;
         }
-        remove_bad_stdin();
     }
     return true;
 }
