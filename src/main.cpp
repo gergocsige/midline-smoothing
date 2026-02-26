@@ -2,6 +2,7 @@
 #include <vector>
 #include <iomanip>
 #include <limits>
+#include <algorithm>
 using namespace std;
 
 struct Point {
@@ -60,16 +61,19 @@ const vector<double> weights = { 0.2, 1.6, 3.8, 4.9, 3.8, 1.6, 0.2 };
 
 void smooth_weighted(const vector<Point>& jagged, vector<Point>& smooth) {
     int len = jagged.size();
-    int k = 0;
-    double weightsum = 0.0;
+
     for( int i = 0; i < len; ++i ) {
-        smooth.at(i) = {0.0, 0.0};
-        for (int j = i-3; j <= i+3; ++j) {
-            if (j >= 0 && j <= len - 1) {
-                smooth.at(i) += jagged.at(j) * weights.at(k);
-                weightsum += weights.at(k);
-            } k++;
-        } smooth.at(i) /= weightsum; k = 0; weightsum = 0.0;
+        Point weighted_pointsum = {0.0, 0.0};
+        double weightsum = 0.0;
+        int start = max(0, i-3);
+        int end = min(len-1, i+3);
+        
+        for (int j = start; j <= end; ++j) {
+            int k = j - i + 3;
+            weighted_pointsum += jagged[j] * weights[k];
+            weightsum += weights[k];
+        }
+        smooth[i] = weighted_pointsum / weightsum;
     }
 }
 
@@ -100,7 +104,6 @@ bool get_points(vector<Point>& points) {
         }
         remove_bad_stdin();
     }
-    remove_bad_stdin();
     return true;
 }
 
