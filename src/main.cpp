@@ -98,7 +98,9 @@ bool get_points(vector<Point>& points) {
             remove_bad_stdin();
             return false;
         }
+        remove_bad_stdin();
     }
+    remove_bad_stdin();
     return true;
 }
 
@@ -110,10 +112,9 @@ int main(void) {
     
     vector<Point> points(n);
     vector<Point> smooth(n);
-
-    for(Point& pt : points) {
-        cout << "Enter Point x and y coordinate: ";
-        cin >> pt;
+    
+    while (!get_points(points)) {
+        cout << "Invalid input, try again (all previous points ignored)" << endl;
     }
 
     cout << endl << "Moving average smoothing:" << endl;
