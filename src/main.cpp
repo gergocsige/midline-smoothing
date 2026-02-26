@@ -34,7 +34,7 @@ istream& operator>>(istream& is, Point& pt) {
 };
 // Operator overload for printing a vector of points
 ostream& operator<<(ostream& os, const vector<Point>& pts) {
-    for(Point pt : pts) {
+    for(const Point& pt : pts) {
         os << pt << endl;
     } return os;
 };
@@ -92,7 +92,7 @@ void smooth_weighted(const vector<Point>& jagged, vector<Point>& smooth) {
 }
 
 /**
- * @brief Function to clear bad stdin contents after a failed fetch of it
+ * @brief Inline function to clear bad stdin contents after a failed fetch of it
  * Clears an unlimited ammount of characters form input stream until a newline is encountered
  */
 inline void remove_bad_stdin() { cin.ignore(numeric_limits<streamsize>::max(), '\n'); };
@@ -110,13 +110,16 @@ bool get_num_of_points(int& n) {
     cin >> n;
     // If input fetching fails
     if (cin.fail()) {
+        // Safely exiting program in case input stream ended abruptly
+        if (cin.eof()) exit(1);
         // Clear locked state of cin
         cin.clear();
         // Remove extraneous input left in buffer to avoid further error
         remove_bad_stdin();
         return false;
     // Number of points has to be positive
-    } else if (n <= 0) {
+    } else if (n <= 0 || n >= 1000000) {
+        remove_bad_stdin();
         return false;
     }
     return true;
@@ -136,6 +139,8 @@ bool get_points(vector<Point>& points) {
         cin >> pt;
         // If input fetching fails
         if (cin.fail()) {
+            // Safely exiting program in case input stream ended abruptly
+            if (cin.eof()) exit(1);
             // Clear locked state of cin
             cin.clear();
             // Remove extraneous input left in buffer to avoid further error
@@ -157,9 +162,14 @@ bool get_smoothing_type(string& type) {
     // Uncomment for interactive use
     // cout << "Type of smoothing (NONE, MOVING_AVG, WEIGHTED): ";
     cin >> type;
+    // Safely exiting program in case input stream ends abruptly
+    if (cin.fail() && cin.eof()) exit(1);
     // If the input is none of these then fail
-    if (type != "NONE" && type != "MOVING_AVG" && type != "WEIGHTED")
+    if (type != "NONE" && type != "MOVING_AVG" && type != "WEIGHTED") {
+        // Remove extraneous input left in buffer to avoid further error
+        remove_bad_stdin();
         return false;
+    }
     // No further validation required as string type variable can take anything from stdin
     return true;
 }
