@@ -6,7 +6,7 @@
 using namespace std;
 
 struct Point {
-    // Point cordinates
+    // Point coordinates
     double x, y;
 
     // Operator overload for +=-ing points ("this" is a pointer to the point itself)
@@ -117,7 +117,7 @@ bool get_num_of_points(int& n) {
         // Remove extraneous input left in buffer to avoid further error
         remove_bad_stdin();
         return false;
-    // Number of points has to be positive
+    // Number of points has to be positive and a reasonably allocateable number
     } else if (n <= 0 || n >= 1000000) {
         remove_bad_stdin();
         return false;
